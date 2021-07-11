@@ -34,13 +34,11 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-  // render the error page
-  res.status(err.status || 500)
-  res.render('error')
+  console.log('next err', err)
+  res.send({
+    code: 500,
+    msg: '新闻分类失败！您的新闻标题或正文内容中可能含有非法特殊字符！',
+  })
 })
 
 module.exports = app
