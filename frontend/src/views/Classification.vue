@@ -1,133 +1,139 @@
 <template>
   <el-container>
-    <el-header>2021软件杯-新闻分类</el-header>
-    <el-tabs v-model="activeName" @tab-click="handleSwitch">
-      <el-tab-pane label="多条新闻分类" name="multi">
-        <el-row :gutter="20" type="flex" align="middle">
-          <el-col :span="10" :offset="1"
-            ><div class="translate-button">
-              <el-button icon="el-icon-info" circle @click="info()"></el-button>
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                plain
-                @click="transHandle"
-                :disabled="isDisabled"
-                >开始识别</el-button
-              >
-            </div>
-          </el-col>
-          <el-col :span="10">
-            <el-alert
-              title="提交的含有多条新闻的表格文件格式样例："
-              description="文件的第一行为表头，第二行起才是待分析的数据。“编号”是新闻条目的编号；“chanelName”上传时应放空，分析结束后会在该栏填入对应的分类结果；“title”是新闻的标题；“content”是新闻的正文内容。"
-              type="info"
-              :closable="false"
-            >
-            </el-alert>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="10" :offset="1">
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              drag
-              action="http://127.0.0.1:3000/multer/upload"
-              :file-list="fileList"
-              :multiple="false"
-              :before-upload="handleBeforeUpload"
-              :on-success="handleSuccess"
-              :on-error="handleError"
-              :on-change="handleChange"
-              :auto-upload="false"
-              :disabled="isDisabled"
-            >
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">
-                将.xlsx/.csv文件拖到此处，或<em>点击上传</em>
-              </div>
-            </el-upload>
-            <transition name="el-fade-in-linear">
-              <div v-show="show" class="transition-box">
-                <el-progress
-                  :text-inside="true"
-                  :stroke-width="26"
-                  :percentage="percent"
-                ></el-progress>
-                <div id="progress-bar">{{ processMsg }}</div>
-              </div>
-            </transition></el-col
-          >
-          <el-col :span="10">
-            <el-table :data="tableData" border style="width: 100%">
-              <el-table-column prop="no" label="编号" width="50">
-              </el-table-column>
-              <el-table-column
-                prop="channelName"
-                label="channelName"
-                width="120"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="title"
-                label="title"
-                :show-overflow-tooltip="true"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="content"
-                label="content"
-                :show-overflow-tooltip="true"
-              >
-              </el-table-column> </el-table
-          ></el-col>
-        </el-row>
-      </el-tab-pane>
-      <el-tab-pane label="单条新闻分类" name="single">
-        <el-form
-          ref="form"
-          :model="form"
-          :rules="rules"
-          label-width="80px"
-          v-loading="singleLoading"
-        >
-          <el-row :gutter="20">
-            <el-col :span="16" :offset="1">
-              <el-form-item label="新闻标题" prop="title">
-                <el-input v-model="form.title"></el-input> </el-form-item
-            ></el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="16" :offset="1">
-              <el-form-item label="新闻内容" prop="content">
-                <el-input
-                  type="textarea"
-                  v-model="form.content"
-                  :rows="15"
-                ></el-input> </el-form-item
-            ></el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="4" :offset="1">
-              <el-form-item label="分类结果">
-                <el-tag>{{ form.result }}</el-tag>
-              </el-form-item></el-col
-            >
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="10" :offset="1">
-              <el-form-item>
-                <el-button type="primary" @click="submitForm"
-                  >开始分析</el-button
+    <el-header>2021中国软件杯-A7-新闻文本分类算法</el-header>
+    <div class="tab-wrap">
+      <el-tabs v-model="activeName" @tab-click="handleSwitch">
+        <el-tab-pane label="多条新闻分类" name="multi">
+          <el-row :gutter="20" type="flex" align="middle">
+            <el-col :span="11"
+              ><div class="translate-button">
+                <el-button
+                  icon="el-icon-info"
+                  circle
+                  @click="info()"
+                ></el-button>
+                <el-button
+                  type="primary"
+                  icon="el-icon-edit"
+                  plain
+                  @click="transHandle"
+                  :disabled="isDisabled"
+                  >开始识别</el-button
                 >
-                <el-button @click="resetForm">重置</el-button>
-              </el-form-item></el-col
-            >
+              </div>
+            </el-col>
+            <el-col :span="11">
+              <el-alert
+                title="提交的含有多条新闻的表格文件格式样例："
+                description="文件的第一行为表头，第二行起才是待分析的数据。“编号”是新闻条目的编号；“chanelName”上传时应放空，分析结束后会在该栏填入对应的分类结果；“title”是新闻的标题；“content”是新闻的正文内容。"
+                type="info"
+                :closable="false"
+              >
+              </el-alert>
+            </el-col>
           </el-row>
-        </el-form>
-      </el-tab-pane>
-    </el-tabs>
+          <el-row :gutter="20">
+            <el-col :span="11">
+              <el-upload
+                class="upload-demo"
+                ref="upload"
+                drag
+                action="http://127.0.0.1:3000/multer/upload"
+                :file-list="fileList"
+                :multiple="false"
+                :before-upload="handleBeforeUpload"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+                :on-change="handleChange"
+                :auto-upload="false"
+                :disabled="isDisabled"
+              >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                  将.xlsx/.csv文件拖到此处，或<em>点击上传</em>
+                </div>
+              </el-upload>
+              <transition name="el-fade-in-linear">
+                <div v-show="show" class="transition-box">
+                  <el-progress
+                    :text-inside="true"
+                    :stroke-width="26"
+                    :percentage="percent"
+                  ></el-progress>
+                  <div id="progress-bar">{{ processMsg }}</div>
+                </div>
+              </transition></el-col
+            >
+            <el-col :span="11">
+              <el-table :data="tableData" border style="width: 100%">
+                <el-table-column prop="no" label="编号" width="50">
+                </el-table-column>
+                <el-table-column
+                  prop="channelName"
+                  label="channelName"
+                  width="120"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="title"
+                  label="title"
+                  :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="content"
+                  label="content"
+                  :show-overflow-tooltip="true"
+                >
+                </el-table-column> </el-table
+            ></el-col>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="单条新闻分类" name="single">
+          <el-form
+            ref="form"
+            :model="form"
+            :rules="rules"
+            label-width="80px"
+            v-loading="singleLoading"
+          >
+            <el-row :gutter="20">
+              <el-col :span="16">
+                <el-form-item label="新闻标题" prop="title">
+                  <el-input v-model="form.title"></el-input> </el-form-item
+              ></el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="16">
+                <el-form-item label="新闻内容" prop="content">
+                  <el-input
+                    type="textarea"
+                    v-model="form.content"
+                    :rows="15"
+                  ></el-input> </el-form-item
+              ></el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="4">
+                <el-form-item label="分类结果">
+                  <el-tag>{{ form.result }}</el-tag>
+                </el-form-item></el-col
+              >
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="11">
+                <el-form-item>
+                  <el-button type="primary" @click="submitForm"
+                    >开始分析</el-button
+                  >
+                  <el-button @click="resetForm">重置</el-button>
+                </el-form-item></el-col
+              >
+            </el-row>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </el-container>
 </template>
 
@@ -207,8 +213,7 @@ export default {
           position: "bottom-left",
           duration: 0
         });
-        this.fileList = [];
-        this.isDisabled = false;
+        this.resetFileListAndShow();
         return false;
       }
       return true;
@@ -233,12 +238,8 @@ export default {
         } else {
           this.$message.error("数据分析失败！");
         }
-        this.isDisabled = false;
-        this.fileList = [];
         clearTimeout(timer);
-        setTimeout(() => {
-          this.show = false;
-        }, 5000);
+        this.resetFileListAndShow();
       });
     },
 
@@ -265,6 +266,7 @@ export default {
     handleError(res, file) {
       console.log("上传失败：", res);
       this.$message.error("上传失败！");
+      this.resetFileListAndShow();
     },
 
     /**
@@ -337,6 +339,17 @@ export default {
     },
 
     /**
+     * @abstract 重置多条新闻分析的数据状态和显示状态
+     */
+    resetFileListAndShow() {
+      this.isDisabled = false;
+      this.fileList = [];
+      setTimeout(() => {
+        this.show = false;
+      }, 5000);
+    },
+
+    /**
      * @abstract 由于后台模型判断一气呵成，可能存在需要判断的新闻条目较多的情况，故设置进度条虚拟进度计数器器
      *           每秒增长2%，到80%后每秒增长1%，到95%后每秒增长0.5%，直至99.5%停下
      */
@@ -384,7 +397,7 @@ body {
   font-size: 20px;
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
-.el-tabs__header {
+.tab-wrap {
   padding-left: 50px;
   padding-right: 50px;
 }
@@ -394,8 +407,10 @@ body {
 .upload-demo {
   text-align: center;
   height: 100%;
+  width: 100%;
 }
 .el-upload {
+  display: block;
   width: 100%;
   height: 192px;
 }
