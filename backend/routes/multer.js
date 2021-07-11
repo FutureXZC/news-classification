@@ -3,9 +3,11 @@ var router = express.Router()
 
 const multer = require('multer')
 const fs = require('fs')
-const { query } = require('express')
 
-// 单个文件上传
+/**
+ * @abstract 单个文件上传，文件保存至 backend/upload 目录下
+ * @file 上传的文件对象
+ */
 router.post(
   '/upload',
   multer({
@@ -24,7 +26,10 @@ router.post(
   }
 )
 
-// 单个文件下载
+/**
+ * @abstract 单个文件下载
+ * @query filename 要下载的文件名，实际上对应的就是上传的用于分析的文件名
+ */
 router.get('/download', (req, res) => {
   res.download(`upload/${req.query.filename}`)
 })
