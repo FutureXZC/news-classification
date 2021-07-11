@@ -317,13 +317,17 @@ export default {
               });
               this.form.result = this.categories[res.msg];
             } else {
-              this.$message.error("新闻分类失败！");
-              return;
+              this.$message({
+                message:
+                  "新闻分类失败！您的新闻标题或正文内容中可能含有非法特殊字符！",
+                type: "error",
+                duration: 2000
+              });
             }
-            this.singleLoading = false;
             setTimeout(() => {
-              this.show = false;
-            }, 5000);
+              this.singleLoading = false;
+              this.form.result = "待分析";
+            }, 1500);
           });
         }
       });
