@@ -316,6 +316,7 @@ export default {
                 type: "success"
               });
               this.form.result = this.categories[res.msg];
+              this.singleLoading = false;
             } else {
               this.$message({
                 message:
@@ -323,11 +324,11 @@ export default {
                 type: "error",
                 duration: 2000
               });
+              setTimeout(() => {
+                this.singleLoading = false;
+                this.form.result = "待分析";
+              }, 1500);
             }
-            setTimeout(() => {
-              this.singleLoading = false;
-              this.form.result = "待分析";
-            }, 1500);
           });
         }
       });
