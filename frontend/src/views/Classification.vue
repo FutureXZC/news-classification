@@ -297,8 +297,14 @@ export default {
           this.$message("新闻类别正在分析中，请稍后...");
           // 提交表单交给后台模型分析时，应先去除所有的空格、回车和换行，避免调用模型传参时受影响
           cls({
-            title: this.form.title.replace(/\s+/g, ""),
-            content: this.form.content.replace(/\s+/g, ""),
+            title: this.form.title.replace(
+              /[~`!@#$%^&*()\-\+\s\|\[\]\/{}<>\\.]/g,
+              ""
+            ),
+            content: this.form.content.replace(
+              /[~`!@#$%^&*()\-\+\s\|\[\]\/{}<>\\.]/g,
+              ""
+            ),
             mode: 0
           }).then(res => {
             console.log(res);
