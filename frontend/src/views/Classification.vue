@@ -215,6 +215,10 @@ export default {
         });
         this.resetFileListAndShow();
         return false;
+      } else if (/\s/.test(file.name)) {
+        this.$message.error("文件名不能含有空格和中文括号！");
+        this.resetFileListAndShow();
+        return false;
       }
       return true;
     },
